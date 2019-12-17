@@ -2,17 +2,50 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/dark_background_galaxy"
     tools:context=".MainActivity">
+<include
+    android:id="@+id/toolbar"
+    layout="@layout/toolbar" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:tabTextColor="@color/tabTextForeColor"
+        app:tabSelectedTextColor="@color/tabTextSelectedColor">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabItem_songs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tabItem_songs" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabItem_album"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tabItem_album" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabItem_artists"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tabItem_artists" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <SearchView
+        android:layout_width="97dp"
+        android:layout_height="54dp"
+        android:layout_marginStart="600dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/tabLayout"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

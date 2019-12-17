@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@null"
+    tools:context=".MainActivity"
+    >
+
+    <item
+
+        android:id="@+id/action_search"
+        android:orderInCategory="300"
+        android:title="@string/action_search"
+        android:icon="@drawable/ic_action_search"
+        app:showAsAction="ifRoom"></item>
+<!--    <item-->
+<!--        android:id="@+id/action_more"-->
+<!--        android:orderInCategory="300"-->
+<!--        android:title="@string/action_more"-->
+<!--        android:icon="@drawable/ic_action_more_menu"-->
+<!--        app:showAsAction="ifRoom"></item>-->
+
+    <item android:id="@+id/equalizer"
+        android:title="@string/equalizer"/>
+    <item android:id="@+id/setting"
+        android:title="@string/settings"/>
+    <item android:id="@+id/recognizeSongs"
+        android:title="@string/resognizeSongs"/>
+
+
+</menu>
