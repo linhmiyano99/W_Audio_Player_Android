@@ -28,14 +28,6 @@
     <string name="start_recognition" translatable="false">Start Recognition</string>
     <string name="stop_recognition">STOP</string>
     <string name="result">RESULT</string>
-   <!-- <string name="suss" />
-    <string name="error">eror</string>
-    <string name="volume">volume_error</string>
-    <string name="request_radio_meta">REQ</string>
-    <string name="auto_switch_label">AUTOS</string>
-    <string name="auto_switch_open">asd</string>
-    <string name="auto_switch_close">asdasd</string>
--->
 
     <string name="start">start</string>
     <string name="cancel">stop</string>
@@ -47,6 +39,6 @@
     <string name="recording">recording</string>
     <string name="play">play</string>
     <string name="volume">volume:</string>
-    <string name="error">Something wrong with this service!</string>
-    <string name="suss">Completed Auto Recognize Mode</string>
+    <string name="error">Auto Recognize Mode Off!</string>
+    <string name="suss">Auto Recognize Mode On</string>
 </resources>

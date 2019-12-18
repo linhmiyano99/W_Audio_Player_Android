@@ -29,7 +29,7 @@ import androidx.core.app.ActivityCompat;
 
 public class RecognizeSongsActivity extends AppCompatActivity implements IACRCloudListener, IACRCloudRadioMetadataListener {
 
-    private final static String TAG = "MainActivity";
+    private final static String TAG = "RecognizeActivity";
 
     private TextView mVolume, mResult, tv_time;
 
@@ -289,7 +289,7 @@ public class RecognizeSongsActivity extends AppCompatActivity implements IACRClo
     protected void onDestroy() {
         super.onDestroy();
 
-        Log.e("MainActivity", "release");
+        Log.e("RecognizeSongs", "release");
         if (this.mClient != null) {
             this.mClient.release();
             this.initState = false;
