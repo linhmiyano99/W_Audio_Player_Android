@@ -1,29 +1,52 @@
 <resources>
     <string name="app_name">Audio Player</string>
-    <string name="tabItem_songs">Songs</string>
-    <string name="tabItem_album">ALBUMS</string>
-    <string name="tabItem_artists">ARTISTS</string>
-    <string name="navigation_menu">Navigation_menu</string>
-    <string name="action_search">Action_search</string>
-    <string name="action_more">Action_more</string>
-    <string name="title_activity_nav_menu">NavMenuActivity</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
-    <string name="resognizeSongs"> Recognize Songs</string>
+    <string name="tabItem_songs" translatable="false">SONGS</string>
+    <string name="tabItem_album" translatable="false">ALBUMS</string>
+    <string name="tabItem_artists" translatable="false">ARTISTS</string>
+    <string name="navigation_menu" translatable="false">Navigation_menu</string>
+    <string name="action_search" translatable="false">Action_search</string>
+    <string name="action_more" translatable="false">Action_more</string>
+    <string name="title_activity_nav_menu" translatable="false">NavMenuActivity</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="nav_header_title" translatable="false">Android Studio</string>
+    <string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
+    <string name="nav_header_desc" translatable="false">Navigation header</string>
+    <string name="action_settings" translatable="false">Settings</string>
+    <string name="resognizeSongs" translatable="false"> Recognize Songs</string>
     recognizeSongs
 
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
-    <string name="menu_tools">Tools</string>
-    <string name="menu_share">Share</string>
-    <string name="menu_send">Send</string>
-    <string name="equalizer">Equalizer</string>
-    <string name="settings">Settings</string>
-    <string name="header_image">Header_Image</string>
-    <string name="start_recognition">Start Recognition</string>
+    <string name="menu_home" translatable="false">Home</string>
+    <string name="menu_gallery" translatable="false">Gallery</string>
+    <string name="menu_slideshow" translatable="false">Slideshow</string>
+    <string name="menu_tools" translatable="false">Tools</string>
+    <string name="menu_share" translatable="false">Share</string>
+    <string name="menu_send" translatable="false">Send</string>
+    <string name="equalizer" translatable="false">Equalizer</string>
+    <string name="settings" translatable="false">Settings</string>
+    <string name="header_image" translatable="false">Header_Image</string>
+    <string name="start_recognition" translatable="false">Start Recognition</string>
+    <string name="stop_recognition">STOP</string>
+    <string name="result">RESULT</string>
+   <!-- <string name="suss" />
+    <string name="error">eror</string>
+    <string name="volume">volume_error</string>
+    <string name="request_radio_meta">REQ</string>
+    <string name="auto_switch_label">AUTOS</string>
+    <string name="auto_switch_open">asd</string>
+    <string name="auto_switch_close">asdasd</string>
+-->
+
+    <string name="start">start</string>
+    <string name="cancel">stop</string>
+    <string name="request_radio_meta">Request Radio Meta [Test]</string>
+    <string name="auto_switch_label">Auto Recognize:</string>
+    <string name="auto_switch_open">Open</string>
+    <string name="auto_switch_close">Close</string>
+    <string name="stop">stop record and recognize(humming)</string>
+    <string name="recording">recording</string>
+    <string name="play">play</string>
+    <string name="volume">volume:</string>
+    <string name="error">Something wrong with this service!</string>
+    <string name="suss">Completed Auto Recognize Mode</string>
 </resources>

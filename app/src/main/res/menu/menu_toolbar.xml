@@ -12,13 +12,15 @@
         android:orderInCategory="300"
         android:title="@string/action_search"
         android:icon="@drawable/ic_action_search"
-        app:showAsAction="ifRoom"></item>
-<!--    <item-->
-<!--        android:id="@+id/action_more"-->
-<!--        android:orderInCategory="300"-->
-<!--        android:title="@string/action_more"-->
-<!--        android:icon="@drawable/ic_action_more_menu"-->
-<!--        app:showAsAction="ifRoom"></item>-->
+        app:showAsAction="ifRoom">
+
+    </item>
+    <!--    <item-->
+    <!--        android:id="@+id/action_more"-->
+    <!--        android:orderInCategory="300"-->
+    <!--        android:title="@string/action_more"-->
+    <!--        android:icon="@drawable/ic_action_more_menu"-->
+    <!--        app:showAsAction="ifRoom"></item>-->
 
     <item android:id="@+id/equalizer"
         android:title="@string/equalizer"/>
