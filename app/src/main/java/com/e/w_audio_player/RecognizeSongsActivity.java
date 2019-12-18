@@ -23,6 +23,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -31,7 +32,7 @@ public class RecognizeSongsActivity extends AppCompatActivity implements IACRClo
 
     private final static String TAG = "RecognizeActivity";
 
-    private TextView mVolume, mResult, tv_time;
+    private TextView mVolume, mResult, tv_time , time;
 
     private boolean mProcessing = false;
     private boolean mAutoRecognizing = false;
@@ -72,6 +73,7 @@ public class RecognizeSongsActivity extends AppCompatActivity implements IACRClo
         mVolume = (TextView) findViewById(R.id.volume);
         mResult = (TextView) findViewById(R.id.result);
         tv_time = (TextView) findViewById(R.id.time);
+        time = (TextView) findViewById(R.id.time);
 
 
         final Button btn_start = findViewById(R.id.start);
@@ -210,10 +212,12 @@ public class RecognizeSongsActivity extends AppCompatActivity implements IACRClo
         tv_time.setText("");
         mResult.setText("");
         mProcessing = false;
+        mVolume.setText("");
     }
 
     @Override
     public void onResult(ACRCloudResult results) {
+        HashMap<String, String> song;
         this.reset();
 
         // If you want to save the record audio data, you can refer to the following codes.
@@ -228,11 +232,16 @@ public class RecognizeSongsActivity extends AppCompatActivity implements IACRClo
         String result = results.getResult();
 
         String tres = "\n";
-
+        song = new HashMap<String, String>();
         try {
             JSONObject j = new JSONObject(result);
             JSONObject j1 = j.getJSONObject("status");
+            song.put("status", j.getString("status"));
+
             int j2 = j1.getInt("code");
+            song.put("code", j.getString("code"));
+
+
             if(j2 == 0){
                 JSONObject metadata = j.getJSONObject("metadata");
                 //
@@ -247,7 +256,6 @@ public class RecognizeSongsActivity extends AppCompatActivity implements IACRClo
                         tres = tres + (i+1) + ".  Title: " + title + "    Artist: " + artist + "\n";
                     }
                 }
-
                 tres = tres + "\n\n" + result;
             }else{
                 tres = result;
@@ -265,6 +273,9 @@ public class RecognizeSongsActivity extends AppCompatActivity implements IACRClo
     public void onVolumeChanged(double volume) {
         long time = (System.currentTimeMillis() - startTime) / 1000;
         mVolume.setText(getResources().getString(R.string.volume) + volume + "\n\nTime: " + time + " s");
+        tv_time.setText (""+time);
+
+
     }
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
