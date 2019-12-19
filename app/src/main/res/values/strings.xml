@@ -41,4 +41,7 @@
     <string name="volume">volume:</string>
     <string name="error">Auto Recognize Mode Off!</string>
     <string name="suss">Auto Recognize Mode On</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
