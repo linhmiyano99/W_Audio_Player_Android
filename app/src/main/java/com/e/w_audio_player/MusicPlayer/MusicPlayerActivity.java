@@ -1,8 +1,10 @@
 package com.e.w_audio_player.MusicPlayer;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -12,17 +14,17 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
-import com.e.w_audio_player.ListSongs.SongsFragment;
 import com.e.w_audio_player.ListSongs.SongsManager;
+import com.e.w_audio_player.Notification.MusicService;
 import com.e.w_audio_player.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
+import java.util.Random;
+
 
 public class MusicPlayerActivity extends AppCompatActivity
         implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener {
@@ -35,79 +37,69 @@ public class MusicPlayerActivity extends AppCompatActivity
     private ImageButton btnShuffle;
     private SeekBar songProgressBar;
     private TextView songTitleLabel;
+    private TextView songCurrentDurationLabel;
+    private TextView songTotalDurationLabel;
     // Media Player
     private  MediaPlayer mp;
     // Handler to update UI timer, progress bar etc,.
-
-    private Handler mHandler = new Handler() {
-        @Override
-        public void publish(LogRecord record) {
-
-        }
-
-        @Override
-        public void flush() {
-
-        }
-
-        @Override
-        public void close() throws SecurityException {
-
-        }
-    };
-
-        private SongsManager songManager;
-        private int seekForwardTime = 1000;
-        private int seekBackwardTime = 1000;
-        private int currentSongIndex = 0;
-        private boolean isShuffle = false;
-        private boolean isRepeat = false;
-        private ArrayList<HashMap<String, String>> songsList;
+    Handler handler = new Handler();
 
 
 
-        @Override
-        protected void onCreate(@Nullable Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.player);
 
-//        // All player buttons
-            btnPlay = findViewById(R.id.btnPlay);
-            btnForward = findViewById(R.id.btnForward);
-            btnBackward = findViewById(R.id.btnBackward);
-            btnNext = findViewById(R.id.btnNext);
-            btnPrevious = findViewById(R.id.btnPrevious);
-            btnRepeat = findViewById(R.id.btnRepeat);
-            btnShuffle = findViewById(R.id.btnShuffle);
-            songProgressBar = findViewById(R.id.songProgressBar);
-            songTitleLabel = findViewById(R.id.songTitle);
+    private SongsManager songManager;
+    private Utilities utils;
+    private int seekForwardTime = 1000;
+    private int seekBackwardTime = 1000;
+    private int currentSongIndex = 0;
+    private boolean isShuffle = false;
+    private boolean isRepeat = false;
+    private ArrayList<HashMap<String, String>> songsList;
 
 
-            // Mediaplayer
-            mp = new MediaPlayer();
-            songManager = new SongsManager(); // thông tin bài hát
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.player);
+//       // All player button
+        btnPlay = findViewById(R.id.btnPlay);
+        btnForward = findViewById(R.id.btnForward);
+        btnBackward = findViewById(R.id.btnBackward);
+        btnNext = findViewById(R.id.btnNext);
+        btnPrevious = findViewById(R.id.btnPrevious);
+        btnRepeat = findViewById(R.id.btnRepeat);
+        btnShuffle = findViewById(R.id.btnShuffle);
+        songProgressBar = findViewById(R.id.songProgressBar);
+        songTitleLabel = findViewById(R.id.songTitle);
+        songCurrentDurationLabel = findViewById(R.id.songCurrentDurationLabel);
+        songTotalDurationLabel = findViewById(R.id.songTotalDurationLabel);
 
-            // Listeners
-            songProgressBar.setOnSeekBarChangeListener(this);
-            mp.setOnCompletionListener(this);
+        utils = new Utilities();
+        mp = new MediaPlayer();
+        songManager = new SongsManager(); // thông tin bài hát
+            // Listener
+        songProgressBar.setOnSeekBarChangeListener(this);
+        mp.setOnCompletionListener(this);
+        // Load toàn bộ bài hát lên
+        songsList = new ArrayList<>();
+        songsList = songManager.getPlayList();
 
-            // Load toàn bộ bài hát lên
-            songsList = new ArrayList<HashMap<String, String>>();
-            songsList = songManager.getPlayList();
 
-            Log.v("helloooooooo", "ppppppppppppppppppp");
+        Intent intent = getIntent();
+        currentSongIndex = intent.getExtras().getInt("songIndex");
+        sendNotification(currentSongIndex);
 
-            Intent intent = getIntent();
-            currentSongIndex = intent.getExtras().getInt("songIndex");
-            Log.v("helloooooooo", String.valueOf(currentSongIndex));
-            playSong(currentSongIndex);
-        }
+        playSong(currentSongIndex);
+
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-
+        if(mp == null)
+            return;
+        if(mp.isPlaying())
+            Log.v("co nha", "cooooooooooooo");
 
         btnPlay.setOnClickListener(new View.OnClickListener() {
 
@@ -115,14 +107,13 @@ public class MusicPlayerActivity extends AppCompatActivity
             public void onClick(View arg0) {
                 // check for already playing
                 if(mp.isPlaying()){
-                    if(mp!=null){
                         mp.pause();
                         // Changing button image to play button
                         btnPlay.setImageResource(R.drawable.btn_play);
-                    }
+
                 }else{
                     // Resume song
-                    if(mp!=null){
+                   {
                         mp.start();
                         // Changing button image to pause button
                         btnPlay.setImageResource(R.drawable.btn_pause);
@@ -252,20 +243,33 @@ public class MusicPlayerActivity extends AppCompatActivity
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode,
-                                    int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == 100){
-            currentSongIndex = data.getExtras().getInt("songIndex");
-            // play selected song
-            playSong(currentSongIndex);
-
-        }
-
+    public void updateProgressBar() {
+        handler.postDelayed(mUpdateTimeTask, 100);
     }
+
+    private Runnable mUpdateTimeTask = new Runnable() {
+        public void run() {
+            long totalDuration = mp.getDuration();
+            long currentDuration = mp.getCurrentPosition();
+
+            // Displaying Total Duration time
+            songTotalDurationLabel.setText(""+utils.milliSecondsToTimer(totalDuration));
+            // Displaying time completed playing
+            songCurrentDurationLabel.setText(""+utils.milliSecondsToTimer(currentDuration));
+
+            // Updating progress bar
+            int progress = (int)(utils.getProgressPercentage(currentDuration, totalDuration));
+            //Log.d("Progress", ""+progress);
+            songProgressBar.setProgress(progress);
+
+            // Running this thread after 100 milliseconds
+            handler.postDelayed(this, 100);
+        }
+    };
     public void  playSong(int songIndex){
         // Play song
+        if(mp==null)
+            return;
         try {
             mp.reset();
             mp.setDataSource(songsList.get(songIndex).get("songPath"));
@@ -283,6 +287,7 @@ public class MusicPlayerActivity extends AppCompatActivity
             songProgressBar.setMax(100);
 
             // Updating progress bar
+            updateProgressBar();
 
             //updateProgressBar();
         } catch (IllegalArgumentException e) {
@@ -298,7 +303,26 @@ public class MusicPlayerActivity extends AppCompatActivity
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-
+        // check for repeat is ON or OFF
+        if(isRepeat){
+            // repeat is on play same song again
+            playSong(currentSongIndex);
+        } else if(isShuffle){
+            // shuffle is on - play a random song
+            Random rand = new Random();
+            currentSongIndex = rand.nextInt(songsList.size());
+            playSong(currentSongIndex);
+        } else{
+            // no repeat or shuffle ON - play next song
+            if(currentSongIndex < (songsList.size() - 1)){
+                playSong(currentSongIndex + 1);
+                currentSongIndex = currentSongIndex + 1;
+            }else{
+                // play first song
+                playSong(0);
+                currentSongIndex = 0;
+            }
+        }
     }
 
     @Override
@@ -308,12 +332,44 @@ public class MusicPlayerActivity extends AppCompatActivity
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
-
+        // remove message Handler from updating progress bar
+        handler.removeCallbacks(mUpdateTimeTask);
     }
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
+        if(mp == null)
+            return;
+        handler.removeCallbacks(mUpdateTimeTask);
+        int totalDuration = mp.getDuration();
+        int currentPosition = utils.progressToTimer(seekBar.getProgress(), totalDuration);
 
+        // forward or backward to certain seconds
+        mp.seekTo(currentPosition);
+
+        // update timer progress again
+        updateProgressBar();
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        if(mp != null)
+        mp.release();
+    }
+    @SuppressLint("NewApi")
+    public void sendNotification(int index) {
+        startService(index);
+    }
+
+    public void startService(int songIndex){
+        Intent serviceIntent = new Intent(this, MusicService.class);
+        serviceIntent.putExtra("songIndex", String.valueOf(songIndex));
+        ContextCompat.startForegroundService(this, serviceIntent);
+    }
+    public void stopService(){
+        Intent serviceIntent = new Intent(this, MusicService.class);
+        stopService(serviceIntent);
     }
 }
 
