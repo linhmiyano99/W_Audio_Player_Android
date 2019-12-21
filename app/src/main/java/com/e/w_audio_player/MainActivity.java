@@ -39,9 +39,15 @@ public class MainActivity extends AppCompatActivity {
     public int currentPosition;
     private MediaPlayer mp;
     boolean isChange = false;
+    boolean isPlaying= false;
+
 
     public boolean IsChange(){
+
         return isChange;
+    }
+    public boolean IsPlaying(){
+        return isPlaying;
     }
     public void ResetChange(){
         isChange = false;
@@ -117,38 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //Xin quyền truy cập từ người dùng
-    private static final String[] PERMISIONS={Manifest.permission.READ_EXTERNAL_STORAGE};
-    private static final int REQUEST_PERMISIONS =12345;
-    private static final int PERMISIONS_COUNT =1;
-    @SuppressLint("NewApi")
-    private boolean arePermisionDenied(){
-        for(int i = 0; i<PERMISIONS_COUNT;i++){
-            if(checkSelfPermission(PERMISIONS[i]) != PackageManager.PERMISSION_GRANTED){
-                return true;
-            }
-        }
-        return false;
-    }
 
-    @SuppressLint("NewApi")
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(arePermisionDenied()){
-            ((ActivityManager)(this.getSystemService(ACTIVITY_SERVICE))).clearApplicationUserData();
-            recreate();
-        }else{
-            onResume();
-        }
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && arePermisionDenied()) {
-            requestPermissions(PERMISIONS, REQUEST_PERMISIONS);
-        }
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
