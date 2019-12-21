@@ -1,6 +1,5 @@
 package com.e.w_audio_player.ListSongs;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,14 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.e.w_audio_player.MainActivity;
-import com.e.w_audio_player.MusicPlayer.MusicPlayerActivity;
-import com.e.w_audio_player.Notification.MusicService;
+import com.e.w_audio_player.MusicPlayer.MusicPlayerFragment;
 import com.e.w_audio_player.R;
 
 import java.util.ArrayList;
@@ -61,21 +58,20 @@ public class SongsFragment extends Fragment {
                 new RecyclerItemClickListener(context, recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
                         // do whatever
-                        Intent intent = new Intent(getContext(),  MusicPlayerActivity.class);
+                        Intent intent = new Intent(getContext(),  MusicPlayerFragment.class);
                         // Sending songIndex to PlayerActivity
-                        intent.putExtra("songIndex", position);
-                        getContext().startActivity(intent);
+                        ((MainActivity)getActivity()).setPos(position);
+                        Log.v("Hello", String.valueOf(position));
+                        //getContext().startActivity(intent);
                     }
 
                     @Override public void onLongItemClick(View view, int position) {
                         // do whatever
                         // do whatever
-                        Log.v("Hello","recyclerview clicked");
-                        Intent intent = new Intent(getContext(),  MusicPlayerActivity.class);
                         // Sending songIndex to PlayerActivity
-                        intent.putExtra("songIndex", position);
+                        ((MainActivity)getActivity()).setPos(position);
+
                         Log.v("Hello", String.valueOf(position));
-                        getContext().startActivity(intent);
                     }
                 })
         );

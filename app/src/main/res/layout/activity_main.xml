@@ -32,7 +32,7 @@
             android:id="@+id/tabItem_album"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tabItem_album" />
+            android:text="@string/tabItem_player" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabItem_artists"

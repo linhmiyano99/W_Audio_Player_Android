@@ -5,7 +5,6 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -13,7 +12,6 @@ import com.e.w_audio_player.ListSongs.SongsManager;
 import com.e.w_audio_player.MainActivity;
 import com.e.w_audio_player.R;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -21,14 +19,14 @@ import static com.e.w_audio_player.Notification.App.CHANNEL_ID_1;
 
 public class MusicService extends Service {
     public ArrayList<HashMap<String, String>> songsList = new ArrayList<HashMap<String, String>>();
-    private MediaPlayer mp;
+    //private MediaPlayer mp;
 
     @Override
     public void onCreate() {
         super.onCreate();
         SongsManager plm = new SongsManager();
         songsList = plm.getPlayList();
-        mp = new MediaPlayer();
+        //mp = new MediaPlayer();
     }
 
     @Override
@@ -40,9 +38,9 @@ public class MusicService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         int input = Integer.parseInt(intent.getStringExtra("songIndex"));
 
-        Intent notificationIntent = new Intent(this, MainActivity.class);
+        Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, 0);
 
         Notification notification = new Notification.Builder(getApplicationContext(), CHANNEL_ID_1)
                 .setSmallIcon(R.drawable.ic_music)
@@ -66,9 +64,9 @@ public class MusicService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mp.stop();
+        //mp.stop();
     }
-    public void  playSong(int songIndex){
+    /*public void  playSong(int songIndex){
         if(mp == null)
             return;
         // Play song
@@ -87,5 +85,5 @@ public class MusicService extends Service {
             e.printStackTrace();
         }
 
-    }
+    }*/
 }

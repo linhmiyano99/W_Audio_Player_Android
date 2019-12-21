@@ -1,23 +1,25 @@
 package com.e.w_audio_player.MusicPlayer;
 
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 import com.e.w_audio_player.ListSongs.SongsManager;
-import com.e.w_audio_player.Notification.MusicService;
+import com.e.w_audio_player.MainActivity;
 import com.e.w_audio_player.R;
 
 import java.io.IOException;
@@ -26,8 +28,18 @@ import java.util.HashMap;
 import java.util.Random;
 
 
-public class MusicPlayerActivity extends AppCompatActivity
-        implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class MusicPlayerFragment extends Fragment
+        implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener{
+
+
+    public MusicPlayerFragment() {
+        // Required empty public constructor
+    }
+
+
     private ImageButton btnPlay;
     private ImageButton btnForward;
     private ImageButton btnBackward;
@@ -58,48 +70,62 @@ public class MusicPlayerActivity extends AppCompatActivity
 
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.player);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState){
+        View view = inflater.inflate(R.layout.player, container, false);
 //       // All player button
-        btnPlay = findViewById(R.id.btnPlay);
-        btnForward = findViewById(R.id.btnForward);
-        btnBackward = findViewById(R.id.btnBackward);
-        btnNext = findViewById(R.id.btnNext);
-        btnPrevious = findViewById(R.id.btnPrevious);
-        btnRepeat = findViewById(R.id.btnRepeat);
-        btnShuffle = findViewById(R.id.btnShuffle);
-        songProgressBar = findViewById(R.id.songProgressBar);
-        songTitleLabel = findViewById(R.id.songTitle);
-        songCurrentDurationLabel = findViewById(R.id.songCurrentDurationLabel);
-        songTotalDurationLabel = findViewById(R.id.songTotalDurationLabel);
+        btnPlay = view.findViewById(R.id.btnPlay);
+        btnForward = view.findViewById(R.id.btnForward);
+        btnBackward = view.findViewById(R.id.btnBackward);
+        btnNext = view.findViewById(R.id.btnNext);
+        btnPrevious = view.findViewById(R.id.btnPrevious);
+        btnRepeat = view.findViewById(R.id.btnRepeat);
+        btnShuffle = view.findViewById(R.id.btnShuffle);
+        songProgressBar = view.findViewById(R.id.songProgressBar);
+        songTitleLabel = view.findViewById(R.id.songTitle);
+        songCurrentDurationLabel = view.findViewById(R.id.songCurrentDurationLabel);
+        songTotalDurationLabel = view.findViewById(R.id.songTotalDurationLabel);
 
         utils = new Utilities();
-        mp = new MediaPlayer();
+        mp = ((MainActivity) getActivity()).getMediaPlayer();
         songManager = new SongsManager(); // thông tin bài hát
-            // Listener
+        // Listener
         songProgressBar.setOnSeekBarChangeListener(this);
         mp.setOnCompletionListener(this);
         // Load toàn bộ bài hát lên
         songsList = new ArrayList<>();
         songsList = songManager.getPlayList();
+        Log.e("currentSongIndex1", String.valueOf(currentSongIndex));
 
-
-        Intent intent = getIntent();
-        currentSongIndex = intent.getExtras().getInt("songIndex");
-        sendNotification(currentSongIndex);
-
-        playSong(currentSongIndex);
-
+        return view;
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         if(mp == null)
             return;
-        if(mp.isPlaying())
-            Log.v("co nha", "cooooooooooooo");
+        Log.e("currentSongIndex2", String.valueOf(currentSongIndex));
+        if(((MainActivity) getActivity()).IsChange() == true)
+            try {
+                currentSongIndex =((MainActivity) getActivity()).getPos();
+                Log.e("currentSongIndex2", String.valueOf(currentSongIndex));
+                if(currentSongIndex != -1) {
+                    playSong(currentSongIndex);
+                }
+                ((MainActivity) getActivity()).ResetChange();
+            }catch (Exception e){
+                e.printStackTrace();
+        }
+        if(mp.isPlaying()){
+            btnPlay.setImageResource(R.drawable.btn_pause);
+
+        }else{
+            // Resume song
+            {
+                btnPlay.setImageResource(R.drawable.btn_play);
+            }
+        }
 
         btnPlay.setOnClickListener(new View.OnClickListener() {
 
@@ -107,13 +133,13 @@ public class MusicPlayerActivity extends AppCompatActivity
             public void onClick(View arg0) {
                 // check for already playing
                 if(mp.isPlaying()){
-                        mp.pause();
-                        // Changing button image to play button
-                        btnPlay.setImageResource(R.drawable.btn_play);
+                    mp.pause();
+                    // Changing button image to play button
+                    btnPlay.setImageResource(R.drawable.btn_play);
 
                 }else{
                     // Resume song
-                   {
+                    {
                         mp.start();
                         // Changing button image to pause button
                         btnPlay.setImageResource(R.drawable.btn_pause);
@@ -207,12 +233,12 @@ public class MusicPlayerActivity extends AppCompatActivity
             public void onClick(View arg0) {
                 if(isRepeat){
                     isRepeat = false;
-                    Toast.makeText(getApplicationContext(), "Repeat is OFF", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Repeat is OFF", Toast.LENGTH_SHORT).show();
                     btnRepeat.setImageResource(R.drawable.btn_repeat);
                 }else{
                     //lặp lại bài hát đang nghe
                     isRepeat = true;
-                    Toast.makeText(getApplicationContext(), "Repeat is ON", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Repeat is ON", Toast.LENGTH_SHORT).show();
                     // make shuffle thành false
                     isShuffle = false;
                     btnRepeat.setImageResource(R.drawable.btn_repeat_focused);
@@ -228,12 +254,12 @@ public class MusicPlayerActivity extends AppCompatActivity
             public void onClick(View arg0) {
                 if(isShuffle){
                     isShuffle = false;
-                    Toast.makeText(getApplicationContext(), "Shuffle is OFF", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Shuffle is OFF", Toast.LENGTH_SHORT).show();
                     btnShuffle.setImageResource(R.drawable.btn_shuffle);
                 }else{
                     // make repeat to true
                     isShuffle= true;
-                    Toast.makeText(getApplicationContext(), "Shuffle is ON", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Shuffle is ON", Toast.LENGTH_SHORT).show();
                     // make shuffle to false
                     isRepeat = false;
                     btnShuffle.setImageResource(R.drawable.btn_shuffle_focused);
@@ -242,6 +268,7 @@ public class MusicPlayerActivity extends AppCompatActivity
             }
         });
     }
+
 
     public void updateProgressBar() {
         handler.postDelayed(mUpdateTimeTask, 100);
@@ -287,6 +314,8 @@ public class MusicPlayerActivity extends AppCompatActivity
             songProgressBar.setMax(100);
 
             // Updating progress bar
+
+
             updateProgressBar();
 
             //updateProgressBar();
@@ -310,7 +339,7 @@ public class MusicPlayerActivity extends AppCompatActivity
         } else if(isShuffle){
             // shuffle is on - play a random song
             Random rand = new Random();
-            currentSongIndex = rand.nextInt(songsList.size());
+            currentSongIndex = rand.nextInt((songsList.size() - 1) - 0 + 1) + 0;
             playSong(currentSongIndex);
         } else{
             // no repeat or shuffle ON - play next song
@@ -351,25 +380,5 @@ public class MusicPlayerActivity extends AppCompatActivity
         updateProgressBar();
     }
 
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-        if(mp != null)
-        mp.release();
-    }
-    @SuppressLint("NewApi")
-    public void sendNotification(int index) {
-        startService(index);
-    }
 
-    public void startService(int songIndex){
-        Intent serviceIntent = new Intent(this, MusicService.class);
-        serviceIntent.putExtra("songIndex", String.valueOf(songIndex));
-        ContextCompat.startForegroundService(this, serviceIntent);
-    }
-    public void stopService(){
-        Intent serviceIntent = new Intent(this, MusicService.class);
-        stopService(serviceIntent);
-    }
 }
-
