@@ -64,6 +64,9 @@ public class MainActivity extends AppCompatActivity {
             mp = new MediaPlayer();
         return mp;
     }
+    public TabLayout getTabLayout(){
+        return tabLayout;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

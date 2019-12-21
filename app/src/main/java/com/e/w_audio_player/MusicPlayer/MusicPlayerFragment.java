@@ -47,6 +47,7 @@ public class MusicPlayerFragment extends Fragment
     private ImageButton btnPrevious;
     private ImageButton btnRepeat;
     private ImageButton btnShuffle;
+    private ImageButton btnPlayList;
     private SeekBar songProgressBar;
     private TextView songTitleLabel;
     private TextView songCurrentDurationLabel;
@@ -81,6 +82,7 @@ public class MusicPlayerFragment extends Fragment
         btnPrevious = view.findViewById(R.id.btnPrevious);
         btnRepeat = view.findViewById(R.id.btnRepeat);
         btnShuffle = view.findViewById(R.id.btnShuffle);
+        btnPlayList = view.findViewById(R.id.btnPlaylist);
         songProgressBar = view.findViewById(R.id.songProgressBar);
         songTitleLabel = view.findViewById(R.id.songTitle);
         songCurrentDurationLabel = view.findViewById(R.id.songCurrentDurationLabel);
@@ -127,6 +129,15 @@ public class MusicPlayerFragment extends Fragment
             }
         }
 
+        btnPlayList.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // check for already playing
+                ((MainActivity) getActivity()).getTabLayout().getTabAt(0).select();
+
+            }
+        });
         btnPlay.setOnClickListener(new View.OnClickListener() {
 
             @Override
