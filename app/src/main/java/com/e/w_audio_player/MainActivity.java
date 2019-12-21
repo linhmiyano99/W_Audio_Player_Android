@@ -10,6 +10,7 @@ import android.media.MediaPlayer;
 import android.media.PlaybackParams;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     public int currentPosition;
     private MediaPlayer mp;
     boolean isChange = false;
-    boolean isPlaying= false;
+    boolean isPlaying= true;
 
 
     public boolean IsChange(){
@@ -170,5 +171,12 @@ public class MainActivity extends AppCompatActivity {
         this.stopService(serviceIntent);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isPlaying= false;
 
+        mp.stop();
+        stopService();
+    }
 }

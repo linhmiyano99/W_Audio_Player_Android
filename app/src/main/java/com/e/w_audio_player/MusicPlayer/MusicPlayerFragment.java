@@ -107,6 +107,8 @@ public class MusicPlayerFragment extends Fragment
         super.onResume();
         if(mp == null)
             return;
+
+
         Log.e("currentSongIndex2", String.valueOf(currentSongIndex));
         if(((MainActivity) getActivity()).IsChange() == true)
             try {
