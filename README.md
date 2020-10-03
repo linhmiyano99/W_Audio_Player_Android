@@ -2,7 +2,7 @@
 
 - This is a music player app developed on the Android platform.
 - Purpose: Bring the best experience to the user
-
+- Technology: Service, ACRCloud Api
 # Authors
 - LongKelvin
 - linhmiyano99
